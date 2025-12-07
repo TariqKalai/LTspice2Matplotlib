@@ -4,6 +4,16 @@ Python tool for generating Matplotlib graphs from exported LTspice simulation da
 
 ---
 
+<div align="center">
+  <a href="URL_to_image_1_or_project_link">
+    <img src="Readme_images/LTspice_original.png"  alt="Default LTspice Plot">
+  </a>
+  Becomes
+  <a href="URL_to_image_2_or_project_link">
+    <img src="Readme_images/LTspice_plotlib.png"  alt="Report-Ready Matplotlib Plot">
+  </a>
+</div>
+
 ## Dependancies
 
 To install and run LTspice2Matplotlib, you'll need a functional Python environment. This utility relies on the following core packages:

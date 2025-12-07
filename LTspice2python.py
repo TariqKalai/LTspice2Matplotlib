@@ -37,7 +37,7 @@ if Param == "y":
         else:
             print(f"Skipping {Name[numero]}: X and Y arrays have different lengths ({len(time)} vs {len(Data)})")
 
-if Param =="n":
+elif Param =="n":
 
     file  = open(Path, "r")
     first = file.read().split(")")[1]
