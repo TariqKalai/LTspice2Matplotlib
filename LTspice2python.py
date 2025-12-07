@@ -2,13 +2,14 @@ import re
 import numpy as np
 from matplotlib import pyplot as plt
 from Functions import data_to_floats
+import sys
 
 Path = input("Path of your data : ")
-Param = input("Does your data have parameters (yes or no) ? ")
+Param = input("Does your data have parameters (y/n) ? ")
 List = []
 Name = []
 
-if Param == "yes":
+if Param == "y":
     
     file  = open(Path, "r")
     first = file.read().split("Step Information")[1:]
@@ -36,7 +37,7 @@ if Param == "yes":
         else:
             print(f"Skipping {Name[numero]}: X and Y arrays have different lengths ({len(time)} vs {len(Data)})")
 
-if Param =="no":
+if Param =="n":
 
     file  = open(Path, "r")
     first = file.read().split(")")[1]
@@ -53,6 +54,9 @@ if Param =="no":
     else:
         print(f"Skipping {Name}: X and Y arrays have different lengths ({len(time)} vs {len(Data)})")
 
+else:
+    print("not y/n anwser, script aborted")
+    sys.exit()
 
 
 
@@ -67,8 +71,17 @@ plt.title("courbe I-V")
 plt.legend(loc='upper left')
 plt.grid(True, linestyle='--', alpha=0.5)
 
-plt.show()
+method = input("Do you want to save the graph as svg or see it (save/show) : ")
+if method == "show":
+    plt.show()
 
+elif method == "save":
+    filename = input("Name of your file ") +".svg"
+    plt.savefig(filename, format="svg")
+
+else :
+    print("Invalid input, the graph won't be saved as svg ")
+    plt.show()
 
 
 
