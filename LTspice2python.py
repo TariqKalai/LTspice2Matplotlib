@@ -1,50 +1,65 @@
 import re
 import numpy as np
 from matplotlib import pyplot as plt
+from Functions import data_to_floats
 
-file  = open("Data/Labo2_part2.txt", "r") 
-first = file.read().split("Step Information")[1:]
-file.close() # Good practice to close the file
-
-pattern = r'V_gs=[0-9]+'
+Path = input("Path of your data : ")
+Param = input("Does your data have parameters (yes or no) ? ")
 List = []
 Name = []
 
-#Separates each step in A list [step1, step2,....]
-for i in first:
-    x = re.findall(pattern, i)[0]
-    Name.append(x)
-    x = i.split(x)[1].split(")")[1]
-    List.append(x)
-
+if Param == "yes":
     
-# for each element in the list get the proper value in form of an array, and takes out the last one since it is ""
-for number,i in enumerate(List):
+    file  = open(Path, "r")
+    first = file.read().split("Step Information")[1:]
+    file.close() 
 
-    #Gets the time array( at first i tought it was 
-    # the same for every data but not really sometimes 
-    # it is different like for double redresseur.txt so it does it in the loop)
-    time = np.array(List[number].split("\n")[1:])
-    time = [element.split("\t")[0] for element in time if element.split("\t")[0] != '']
-    time = np.array(time).astype(float)
-
-    Data = i.split("\n")[1:-1]
-    Data = np.array([thing.split("\t")[1] for thing in Data if thing.split("\t")[1] != '']).astype(float)
-    List[number] = Data
-
+    pattern = input("Write the name of the parameter in regex style : ")
     
+
+    #Separates each step in A list [step1, step2,....]
+    for i in first:
+        x = re.findall(pattern, i)[0]
+        Name.append(x)
+        x = i.split(x)[1].split(")")[1]
+        List.append(x)
+
+    for numero, string_data in enumerate(List):
+
+        List[numero] = data_to_floats(string_data)
+
+        time = List[numero][0]
+        Data = List[numero][1]
+
+        if len(time) == len(Data):
+            plt.plot(time, Data, label=Name[numero])
+        else:
+            print(f"Skipping {Name[numero]}: X and Y arrays have different lengths ({len(time)} vs {len(Data)})")
+
+if Param =="no":
+
+    file  = open(Path, "r")
+    first = file.read().split(")")[1]
+    file.close() 
+
+    List.append(data_to_floats(first))
+    Name = input("what is the label of you graph : ")
+
+    time = List[0][0]
+    Data = List[0][1]
+
     if len(time) == len(Data):
-        plt.plot(time, Data, label=Name[number])
+        plt.plot(time, Data, label=Name)
     else:
-        print(f"Skipping {Name[number]}: X and Y arrays have different lengths ({len(time)} vs {len(Data)})")
+        print(f"Skipping {Name}: X and Y arrays have different lengths ({len(time)} vs {len(Data)})")
 
 
-y_max = np.max([arr.max() for arr in List if arr.size > 0]) # Find the maximum Y-value
+
+
+y_max = np.max([arr[1].max() for arr in List if arr[1].size > 0]) # Find the maximum Y-value
 
 readable_step = y_max / 10 
 plt.yticks(np.arange(0, y_max + readable_step, readable_step))
-
-
 
 plt.xlabel("VDD[V]")
 plt.ylabel("ID [A]")
